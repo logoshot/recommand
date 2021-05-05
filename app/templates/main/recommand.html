@@ -1,0 +1,26 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="ui text container">
+        <ol>
+            {% for article in used %}
+                <li>
+                    <a href="{{ url_for('main.articles', token=article.id)}}">
+                        {{ article.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="ui text container">
+        <ol>
+            {% for article in not_used %}
+                <li>
+                    <a href="{{ url_for('main.articles', token=article.id)}}">
+                        {{ article.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endblock %}

@@ -8,7 +8,7 @@ from redis import Redis
 from rq import Connection, Queue, Worker
 
 from app import create_app, db
-from app.models import Role, User
+from app.models import Role, User, Article
 from config import Config
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
@@ -22,7 +22,7 @@ def make_shell_context():
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
-manager.add_command('runserver', Server(host="0.0.0.0"))
+manager.add_command('runserver', Server(host="127.0.0.1"))
 
 
 @manager.command
@@ -57,6 +57,7 @@ def add_fake_data(number_users):
     Adds fake data to the database.
     """
     User.generate_fake(count=number_users)
+    Article.generate_fake()
 
 
 @manager.command
