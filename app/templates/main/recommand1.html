@@ -1,0 +1,84 @@
+{% extends 'layouts/base.html' %} {% block content %}
+<div class="ui massive relaxed container">
+  <div class="ui two column very grid">
+    <div class="column">
+      <div class="ui list segments raised">
+        {% for article in not_used %}
+        <div class="ui segment" name="{{ article.count }}">
+          <a href="{{ url_for('main.articles', token=article.id)}}">
+            {{ article.title }}
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="column">
+      <div class="ui list segments raised">
+        {% for article in used %}
+        <div class="ui segment" name="{{ article.count }}">
+          <a href="{{ url_for('main.articles', token=article.id)}}">
+            {{ article.title }}
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="ui vertical divider"></div>
+  </div>
+</div>
+<script>
+  function rgbToHex(r, g, b) {
+    var hex = ((r << 16) | (g << 8) | b).toString(16);
+    return "#" + new Array(Math.abs(hex.length - 7)).join("0") + hex;
+  }
+  // hex to rgb
+  function hexToRgb(hex) {
+    var rgb = [];
+    for (var i = 1; i < 7; i += 2) {
+      rgb.push(parseInt("0x" + hex.slice(i, i + 2)));
+    }
+    return rgb;
+  }
+  // 计算渐变过渡色
+  function gradient(startColor, endColor, step) {
+    // 将 hex 转换为rgb
+    var sColor = hexToRgb(startColor),
+      eColor = hexToRgb(endColor);
+
+    // 计算R\G\B每一步的差值
+    var rStep = (eColor[0] - sColor[0]) / step,
+      gStep = (eColor[1] - sColor[1]) / step,
+      bStep = (eColor[2] - sColor[2]) / step;
+
+    var gradientColorArr = [];
+    for (var i = 0; i < step; i++) {
+      gradientColorArr.push(
+          "rgba("+(rStep * i + sColor[0])+","+(gStep * i + sColor[1])+","+(bStep * i + sColor[2])+","+"0.8)"
+      );
+    }
+    return gradientColorArr;
+  }
+
+  // 测试
+  var colors = [
+    "#EAE5C9","#6CC6CB",
+    "#F2F5D0","#F9957F",
+    "#CCFBFF","#EF96C5",
+    "#EEBD89","#D13ABD",
+    "#F6E6BC","#EF33B1"
+  ]
+  var step = 20;
+  var choose = 4;
+  var colorArr = gradient(colors[choose*2], colors[choose*2+1], step);
+  $().ready(function () {
+    $(".segment").each(function () {
+      var node=$(this)[0];
+      var cnt = Number(node.getAttribute("name"));
+      console.log(cnt);
+      cnt = cnt > step-1 ? step-1 : cnt;
+      //$(this).css("background", "rgba(0,0,255," + cnt + ")");
+      node.style.backgroundColor = colorArr[cnt];
+    });
+  });
+</script>
+{% endblock %}

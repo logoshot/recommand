@@ -21,14 +21,14 @@
 
 {% macro header_items(current_user) %}
     {% set endpoints = [
-      ('main.index', config.APP_NAME, 'home'),
-      ('main.about', 'About', 'info'),
-      ('main.recommand', 'recommand', 'what?')
+      ('main.index', '推荐系统', 'home'),
+      ('main.recommand', '推荐页', 'what?'),
+      ('main.accepted', '已采用', 'what?')
     ]%}
     {% set user = [] %}
     {% if current_user.is_authenticated %}
       {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
-    {% endif %} 
+    {% endif %}
     {{ render_menu_items( endpoints +  user ) }}
 {% endmacro %}
 
@@ -84,13 +84,75 @@
 
 {% macro desktop_nav(current_user, dropdown=None) %}
     <div class="computer tablet only row">
-        <div class="ui fixed inverted black main menu">
+        <div class="ui small fixed main menu" style="background-color: whitesmoke;">
             <div class="ui container">
                 {{ header_items(current_user) }}
                 {{ create_dropdown(dropdown) }}
-                <div class="right menu">
-                    {{ account_items(current_user) }}
-                </div>
+                    <div class="ui right search item">
+                      <div class="ui icon input">
+                        <input class="prompt" type="text" placeholder="内容搜索">
+                        <i class="search icon"></i>
+                      </div>
+                      <div class="results"></div>
+                    </div>
+                  <div class="item right menu">
+<div class="ui floating dropdown labeled icon button">
+  <i class="filter icon"></i>
+  <span class="text">标签选择</span>
+  <div class="menu">
+    <div class="scrolling menu">
+      <div class="item">
+        <div class="ui pink empty circular label"></div>
+        娱乐
+      </div>
+      <div class="item">
+        <div class="ui blue empty circular label"></div>
+        体育
+      </div>
+      <div class="item">
+        <div class="ui orange empty circular label"></div>
+        艺术
+      </div>
+      <div class="item">
+        <div class="ui purple empty circular label"></div>
+        美食
+      </div>
+      <div class="item">
+        <div class="ui olive empty circular label"></div>
+        金融
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ui floating dropdown labeled icon button">
+  <i class="filter icon"></i>
+  <span class="text">时间选择</span>
+  <div class="menu">
+    <div class="divider"></div>
+    <div class="header">
+      <i class="calendar alternate outline icon"></i>
+    </div>
+    <div class="scrolling menu">
+      <div class="item">
+        <div class="ui red empty circular label"></div>
+        今天
+      </div>
+      <div class="item">
+        <div class="ui blue empty circular label"></div>
+        最近三天
+      </div>
+      <div class="item">
+        <div class="ui black empty circular label"></div>
+        最近一周
+      </div>
+      <div class="item">
+        <div class="ui purple empty circular label"></div>
+        最近一个月
+      </div>
+    </div>
+  </div>
+</div>
+                  </div>
             </div>
         </div>
     </div>

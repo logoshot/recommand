@@ -7,7 +7,7 @@ from flask_script import Manager, Shell, Server
 from redis import Redis
 from rq import Connection, Queue, Worker
 
-from app import create_app, db
+from app import create_app, db, scheduler
 from app.models import Role, User, Article
 from config import Config
 

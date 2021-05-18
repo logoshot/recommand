@@ -1,32 +1,107 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base.html' %} {% block content %}
 
-{% block content %}
-    <div class="ui attached segment">
-        <h1>{{ article.title }}</h1>
-        <p>{{ article.body }}</p>
+<div class="ui container">
+  <div class="ui grid">
+    <div class="nine wide column">
+      <h1>{{ article.title }}</h1>
     </div>
-    <div class="ui bottom attached button" tabindex="0">
-        <form method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="flag" id="flag" value="{%if article.flag_use %} true {% else %} false {% endif %}">
-            <input class="ui {%if article.flag_use %} positive button {% else %} button {% endif %}" id="use" type="submit" value="{%if article.flag_use %} 已采用 {% else %} 采用 {% endif %}">
-        </form>
+    <div class="three wide column">
+      <div class="ui mini left action input">
+          <div class="ui mini button">
+          <i class="ui eye icon"></i>
+          </div>
+        <input type="text" value="{{ article.score*100//1/100 }}"/>
+      </div>
     </div>
-    <script>
-        $($("#use").click(function() {
-            var b = $("#use")[0];
-            var f = $("#flag")[0];
-            if (f.value.includes('false')) {
-                b.value = "已采用";
-                b.className = "ui positive button";
-                f.value = "true";
-            }
-            else {
-                b.value = "采用";
-                b.className = "ui button";
-                f.value = "false";
-            }
-        })
-        )
-    </script>
+    <div class="four wide column">
+      <div class="ui mini right labeled left icon input">
+        <i class="tags icon"></i>
+        <input type="text" placeholder="输入标签" />
+        <a class="ui tag label"> 添加标签 </a>
+      </div>
+    </div>
+  </div>
+  <div class="ui grid" style="margin: -1em -1em -2em -1em;">
+    <div class="three wide column">
+      <span class="category">{{ article.category }}</span>
+    </div>
+    <div class="three wide column">
+      <span class="middle source">{{ article.source }}</span>
+    </div>
+    <div class="six wide column">
+      <span class="time">{{ article.pub_date }}</span>
+    </div>
+    <div class="four wide column">
+      <div class="ui small tag label" style="color: whitesmoke">
+        {{ article.tags }}
+      </div>
+    </div>
+  </div>
+  <div class="ui large segment container stacked">
+    <p>{{ article.body }}</p>
+  </div>
+  <div class="ui bottom attached button" tabindex="0">
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input
+        type="hidden"
+        name="flag"
+        id="flag"
+        value="{%if article.flag_use %} true {% else %} false {% endif %}"
+      />
+      <input
+        class="ui {%if article.flag_use %} positive button {% else %} button {% endif %}"
+        id="use"
+        type="submit"
+        value="{%if article.flag_use %} 已采用 {% else %} 采用 {% endif %}"
+      />
+    </form>
+  </div>
+</div>
+<script>
+  $(
+    $("#use").click(function () {
+      var b = $("#use")[0];
+      var f = $("#flag")[0];
+      if (f.value.includes("false")) {
+        b.value = "已采用";
+        b.className = "ui positive button";
+        f.value = "true";
+      } else {
+        b.value = "采用";
+        b.className = "ui button";
+        f.value = "false";
+      }
+    })
+  );
+  var colors = [
+    "#EAE5C9",
+    "#6CC6CB",
+    "#F2F5D0",
+    "#F9957F",
+    "#CCFBFF",
+    "#EF96C5",
+    "#EEBD89",
+    "#D13ABD",
+    "#F6E6BC",
+    "#EF33B1",
+    "#AEBAF8",
+    "#C973FF",
+    "#FFDB01",
+    "#0E197D",
+    "#52E5E7",
+    "#0D25B9",
+    "#F97794",
+    "#623AA2",
+  ];
+  $().ready(function () {
+    $(".ui.small.tag.label").each(function () {
+      var node = $(this)[0];
+      var text = node.innerHTML;
+      text = text.replace(/\s*/g,"");
+      var n = (text.charCodeAt(0) + text.charCodeAt(1) * 11) % 18;
+      node.style.backgroundColor = colors[n];
+    });
+  });
+</script>
 {% endblock %}

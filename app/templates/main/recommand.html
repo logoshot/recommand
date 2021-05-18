@@ -1,26 +1,65 @@
-{% extends 'layouts/base.html' %}
-
-{% block content %}
-    <div class="ui text container">
-        <ol>
-            {% for article in used %}
-                <li>
-                    <a href="{{ url_for('main.articles', token=article.id)}}">
-                        {{ article.title }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ol>
+{% extends 'layouts/base.html' %} {% block content %}
+<div class="ui three cards container">
+  {% for article in not_used %}
+  <a class="ui card" href="{{ url_for('main.articles', token=article.id)}}">
+    <div class="content">
+      <div class="header">{{ article.title }}</div>
+      <div class="meta">
+        <span class="right floated time">{{ article.pub_date }}</span>
+        <span class="category">{{ article.category }}</span>
+        <span class="middle source">{{ article.source }}</span>
+      </div>
+      <div class="ui fitted divider" style="background-color: papayawhip;"></div>
+      <div class="description">
+        <p class="ui ellipsis">{{ article.body|truncate(50) }}</p>
+      </div>
     </div>
-    <div class="ui text container">
-        <ol>
-            {% for article in not_used %}
-                <li>
-                    <a href="{{ url_for('main.articles', token=article.id)}}">
-                        {{ article.title }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ol>
+    <div class="extra content">
+      <div class="ui small tag label" style="color: whitesmoke;">{{ article.tags }}</div>
+      <span class="right floated">
+        <i class="eye icon"></i>
+        {{ article.score*100//1/100 }}
+      </span>
     </div>
+    <div class="ui red bottom attached progress">
+      <div class="bar" id="{{ article.count }}"></div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+<script>
+  var colors = [
+    "#EAE5C9",
+    "#6CC6CB",
+    "#F2F5D0",
+    "#F9957F",
+    "#CCFBFF",
+    "#EF96C5",
+    "#EEBD89",
+    "#D13ABD",
+    "#F6E6BC",
+    "#EF33B1",
+    "#AEBAF8",
+    "#C973FF",
+    "#FFDB01",
+    "#0E197D",
+    "#52E5E7",
+    "#0D25B9",
+    "#F97794",
+    "#623AA2"
+  ];
+  $().ready(function () {
+    $(".bar").each(function () {
+      var node = $(this)[0];
+      var cnt = Number(node.getAttribute("id"));
+      node.style.width = Math.min(cnt*10,100)+"%";
+    });
+    $(".ui.small.tag.label").each(function() {
+      var node = $(this)[0];
+      var text = node.innerHTML;
+      var n = (text.charCodeAt(0)+text.charCodeAt(1)*11)%18;
+      node.style.backgroundColor = colors[n];
+    });
+  });
+</script>
 {% endblock %}

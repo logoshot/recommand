@@ -21,18 +21,25 @@ def about():
 
 @main.route('/recommand', methods=['GET', 'POST'])
 def recommand():
-    not_used = Article.get_unused()
-    used = Article.get_used()
+    not_used = Article.query.filter_by(flag_use=False).order_by(Article.score.desc())
+    used = Article.query.filter_by(flag_use=True).order_by(Article.pub_date)
     return render_template('main/recommand.html', not_used=not_used, used=used)
+
+
+@main.route('/accepted', methods=['GET', 'POST'])
+def accepted():
+    not_used = Article.query.filter_by(flag_use=False).order_by(Article.score.desc())
+    used = Article.query.filter_by(flag_use=True).order_by(Article.pub_date)
+    return render_template('main/accepted.html', not_used=not_used, used=used)
 
 
 @main.route('/articles/<token>', methods=['GET', 'POST'])
 def articles(token):
     article = Article.query.filter_by(id=token).first()
+    article.count += 1
     print(request.method)
     if request.method=='POST':
         flag = False if request.form['flag']=='false' else True
         article.flag_use = flag
-        db.session.add(article)
-        db.session.commit()
+    db.session.commit()
     return render_template('main/articles.html', article=article)
